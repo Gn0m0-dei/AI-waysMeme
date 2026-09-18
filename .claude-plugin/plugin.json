@@ -1,0 +1,14 @@
+{
+  "author": {
+    "name": "Gn0m0-dei",
+    "url": "https://github.com/Gn0m0-dei"
+  },
+  "description": "Your AI answers in memes rendered inside the terminal. Unnecessary, stupid, and impossible to misread.",
+  "displayName": "AI-waysMeme",
+  "homepage": "https://github.com/Gn0m0-dei/AI-waysMeme",
+  "keywords": ["meme", "terminal", "ansi", "fun", "truecolor"],
+  "license": "MIT",
+  "name": "aiwaysmeme",
+  "repository": "https://github.com/Gn0m0-dei/AI-waysMeme",
+  "version": "0.1.0"
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "description": "Skills that make an agent answer with memes instead of prose.",
+      "skills": ["aiwaysmeme"],
+      "title": "Fun"
+    }
+  ],
+  "notGrouped": "bottom"
+}

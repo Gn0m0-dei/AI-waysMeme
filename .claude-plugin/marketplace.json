@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "description": "Too dumb to exist, too fun not to build. Your AI answers in memes.",
+  "name": "aiwaysmeme",
+  "owner": {
+    "name": "Gn0m0-dei",
+    "url": "https://github.com/Gn0m0-dei"
+  },
+  "plugins": [
+    {
+      "category": "fun",
+      "description": "Turns every answer into a meme rendered as truecolor half-blocks in your terminal. Zero dependencies, three clients, one bad idea.",
+      "name": "aiwaysmeme",
+      "source": "./"
+    }
+  ]
+}

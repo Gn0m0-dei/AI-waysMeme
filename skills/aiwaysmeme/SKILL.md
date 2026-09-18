@@ -1,6 +1,11 @@
 ---
 name: aiwaysmeme
 description: "Answer with a meme rendered in the terminal instead of prose. Use while meme mode is on: pick a template whose meaning matches the point, write short captions, render it."
+license: MIT
+compatibility: Requires node 22 or newer and a terminal with truecolor and Unicode. A client that repaints the whole screen, such as Claude Code in full-screen mode, paints over the meme.
+metadata:
+  author: Gn0m0-dei
+  version: "0.1.0"
 ---
 
 # AI-waysMeme

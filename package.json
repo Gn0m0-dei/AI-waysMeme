@@ -50,7 +50,8 @@
     ],
     "skills": [
       "./skills"
-    ]
+    ],
+    "image": "https://raw.githubusercontent.com/Gn0m0-dei/AI-waysMeme/main/assets/cover.png"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"

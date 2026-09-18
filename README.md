@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/aiwaysmeme"><img alt="npm" src="https://img.shields.io/badge/npm-not_published_yet-cb3837?style=flat-square&logo=npm&logoColor=white" /></a>
+  <a href="https://www.npmjs.com/package/aiwaysmeme"><img alt="npm" src="https://img.shields.io/npm/v/aiwaysmeme?style=flat-square&logo=npm&logoColor=white&color=cb3837" /></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue?style=flat-square&logo=opensourceinitiative&logoColor=white" /></a>
   <a href="https://www.skills.sh"><img alt="Agent Skills" src="https://img.shields.io/badge/Agent_Skills-compatible-4b3baf?style=flat-square" /></a>
   <a href="#claude-code--as-a-plugin"><img alt="Claude Code: plugin" src="https://img.shields.io/badge/Claude_Code-plugin-d97757?style=flat-square&logo=claude&logoColor=white" /></a>
-  <a href="#opencode"><img alt="opencode: plugin, unpublished" src="https://img.shields.io/badge/opencode-plugin_(unpublished)-000000?style=flat-square&logo=opencode&logoColor=white" /></a>
+  <a href="#opencode"><img alt="opencode: plugin" src="https://img.shields.io/badge/opencode-plugin-000000?style=flat-square&logo=opencode&logoColor=white" /></a>
   <a href="#pi"><img alt="pi: package" src="https://img.shields.io/badge/pi-package-6e56cf?style=flat-square" /></a>
   <a href="#how-it-works-for-the-three-people-who-care"><img alt="Dependencies: zero" src="https://img.shields.io/badge/dependencies-0-success?style=flat-square" /></a>
   <a href="#requirements"><img alt="Terminal: truecolor" src="https://img.shields.io/badge/terminal-truecolor-ff69b4?style=flat-square" /></a>
@@ -26,10 +26,6 @@
   <em>Unnecessary. Stupid. Done because I could.<br>
   It shouldn't exist, but here we are.</em>
 </p>
-
-> **Status: not published to npm yet.** The `npm install` and `pi install`
-> lines below are what they will be. Until the package is up, install from the
-> repository — every command that follows has a git equivalent.
 
 Your AI assistant explains things with paragraphs. Paragraphs are for people who
 have time. AI-waysMeme makes it answer with a meme, rendered **inside your
@@ -131,18 +127,14 @@ This registers `/aiwaysmeme:on` and `/aiwaysmeme:off` as real commands.
 pi install npm:aiwaysmeme
 ```
 
-`git:github.com/Gn0m0-dei/AI-waysMeme` works too, and is the only one that
-works today. It installs the skill and registers `/aiwaysmeme-on` and
-`/aiwaysmeme-off`.
+`git:github.com/Gn0m0-dei/AI-waysMeme` works too, if you would rather track the
+repository than the releases. It installs the skill and registers
+`/aiwaysmeme-on` and `/aiwaysmeme-off`.
 
 ### opencode
 
-> **Not installable yet.** opencode loads plugins from npm or from a local
-> plugin directory, and this package is not published. The plugin below is
-> written and tested; it needs `npm publish` before anyone can use it.
-
-Once published, add it to `opencode.json` and it registers both commands and the
-skill in one step:
+Add the plugin to `opencode.json` and it registers both commands and the skill
+in one step — opencode installs it from npm itself:
 
 ```json
 {
@@ -171,7 +163,7 @@ activates by description.
 |---|---|---|
 | Claude Code | `/plugin install aiwaysmeme` | `/aiwaysmeme:on`, `/aiwaysmeme:off` |
 | pi | `pi install npm:aiwaysmeme` | `/aiwaysmeme-on`, `/aiwaysmeme-off` |
-| opencode | One line in `opencode.json`, once the package is on npm | The same two |
+| opencode | One line in `opencode.json` | The same two |
 | Any other Agent Skills host | `npx skills add …` | None; activates by description |
 
 ## How it works, for the three people who care

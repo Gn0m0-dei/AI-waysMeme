@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "exclude": ["node_modules"],
+  "include": [
+    "bin/**/*.ts",
+    "extensions/**/*.ts",
+    "lib/**/*.ts",
+    "plugins/**/*.ts",
+    "test/**/*.ts",
+    "vitest.config.ts"
+  ]
+}

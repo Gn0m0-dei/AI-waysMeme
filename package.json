@@ -1,6 +1,6 @@
 {
   "name": "aiwaysmeme",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Your AI answers in memes. Unnecessary, stupid, and rendered right in your terminal.",
   "type": "module",
   "main": "./plugins/opencode.ts",

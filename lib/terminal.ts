@@ -127,7 +127,15 @@ export const paint = (frame: string, device?: string): string => {
   try {
     const handle = openSync(device, 'w');
     try {
-      writeSync(handle, frame);
+      // writeSync reports how much it actually wrote and a terminal device can
+      // take less than it is given. A truncated frame is not a shorter meme: an
+      // image protocol sequence that never reaches its terminator is printed as
+      // its own base64, which is what a cut frame looks like on screen.
+      const bytes = Buffer.from(frame, 'utf8');
+      let written = 0;
+      while (written < bytes.length) {
+        written += writeSync(handle, bytes, written, bytes.length - written);
+      }
     } finally {
       closeSync(handle);
     }

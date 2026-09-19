@@ -94,7 +94,7 @@ Two tiers, picked automatically. Nothing to configure.
 - An agent that supports [Agent Skills](https://www.skills.sh) or Claude Code plugins.
 - **An agent that does not repaint the whole screen.** Claude Code must run with
   `"tui": "default"`, not `"fullscreen"` — see the note under its install step.
-- **Node.js 22 or newer.** No build step: the package runs TypeScript directly.
+- **Node.js 22 or newer.** Nothing to build or configure after installing.
 - **A terminal with truecolor and Unicode.** Windows Terminal, iTerm2, Warp,
   Ghostty, kitty, Alacritty, WezTerm, GNOME Terminal, the VS Code terminal, and
   basically anything from this decade. The legacy `cmd.exe` console host is not
@@ -144,6 +144,27 @@ in one step — opencode installs it from npm itself:
 ```
 
 The plugin never overwrites a command you configured yourself.
+
+Some distribution packages of opencode — the openSUSE Tumbleweed RPM among them
+— disable npm installs, and the plugin above never arrives: `opencode plugin
+aiwaysmeme -g` fails with `NpmInstallFailedError` and the log says `npm install
+disabled by distribution policy`. Point opencode at a clone instead, which works
+because this package has no runtime dependencies to install:
+
+```bash
+git clone https://github.com/Gn0m0-dei/AI-waysMeme.git ~/.config/opencode/packages/AI-waysMeme
+cd ~/.config/opencode/packages/AI-waysMeme && pnpm install && pnpm build
+```
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["~/.config/opencode/packages/AI-waysMeme/plugins/opencode.ts"]
+}
+```
+
+The build step is what puts the renderer in `dist/`; opencode loads the plugin
+itself straight from TypeScript.
 
 ### Any Agent Skills host
 

@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 import { MemeCommandName, readCommands } from '../lib/commands.ts';
 import { cellAspect, fitToTerminal } from '../lib/fit.ts';
-import { buildImageUrl, escapeCaption } from '../lib/memegen.ts';
+import { buildImageUrl, escapeCaption, ImageFormat } from '../lib/memegen.ts';
 import { packageRoot } from '../lib/package-root.ts';
 import { decodePng } from '../lib/png.ts';
 import { canBake, wrapText } from '../lib/render.ts';
@@ -115,15 +115,35 @@ describe('escapeCaption', () => {
 describe('buildImageUrl', () => {
   it('asks memegen for the exact pixel size the terminal box needs', () => {
     const box = fitToTerminal(0.639, { columns: 140, rows: 80 });
-    expect(buildImageUrl(MemeTemplate.Drake, ['no', 'yes'], box)).toBe(
+    const url = buildImageUrl(MemeTemplate.Drake, ['no', 'yes'], {
+      format: ImageFormat.Png,
+      width: box.pixelWidth,
+      height: box.pixelHeight,
+    });
+    expect(url).toBe(
       `https://api.memegen.link/images/drake/no/yes.png?width=${box.pixelWidth}&height=${box.pixelHeight}`,
     );
   });
 
   it('requests the blank template when there are no captions', () => {
     const box = fitToTerminal(1, { columns: 140, rows: 80 });
-    expect(buildImageUrl(MemeTemplate.Doge, [], box)).toContain(
-      '/images/doge.png?',
+    const url = buildImageUrl(MemeTemplate.Doge, [], {
+      format: ImageFormat.Png,
+      width: box.pixelWidth,
+    });
+    expect(url).toContain('/images/doge.png?');
+  });
+
+  // A terminal that draws real pixels decodes the image itself, so it gets JPEG:
+  // the same meme is five times smaller, and size is what corrupts a frame on
+  // its way through a terminal device.
+  it('asks for a JPEG with no height when only a width is given', () => {
+    const url = buildImageUrl(MemeTemplate.ChangeMyMind, ['hot take'], {
+      format: ImageFormat.Jpeg,
+      width: 600,
+    });
+    expect(url).toBe(
+      'https://api.memegen.link/images/cmm/hot_take.jpg?width=600',
     );
   });
 });

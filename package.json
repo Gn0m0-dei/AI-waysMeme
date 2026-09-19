@@ -26,7 +26,7 @@
     "agent-skills"
   ],
   "files": [
-    "bin",
+    "dist",
     "skills",
     "extensions",
     "plugins",
@@ -42,7 +42,10 @@
     "prepare": "husky || true",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm build",
+    "dev": "node --experimental-transform-types --disable-warning=ExperimentalWarning bin/aiwaysmeme.ts"
   },
   "pi": {
     "extensions": [
@@ -71,6 +74,6 @@
     "vitest": "4.1.10"
   },
   "bin": {
-    "aiwaysmeme": "./bin/aiwaysmeme.ts"
+    "aiwaysmeme": "./dist/bin/aiwaysmeme.js"
   }
 }

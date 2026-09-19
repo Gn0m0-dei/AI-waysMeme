@@ -1,7 +1,25 @@
+import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Resolved from this file rather than from each caller: the hosts load their
-// entry points from folders at different depths, so anything computing the root
-// relative to itself breaks the moment a file moves.
-export const packageRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
+// Found by walking up to the directory that holds package.json rather than by
+// counting levels: this file runs from lib/ in the repository and from
+// dist/lib/ in the published package, and the data it locates — commands/ and
+// skills/ — stays at the root in both.
+const MANIFEST = 'package.json';
+
+const findPackageRoot = (start: string): string => {
+  let directory = start;
+  while (!existsSync(join(directory, MANIFEST))) {
+    const parent = dirname(directory);
+    if (parent === directory) {
+      throw new Error(`No ${MANIFEST} above ${start}.`);
+    }
+    directory = parent;
+  }
+  return directory;
+};
+
+export const packageRoot = findPackageRoot(
+  dirname(fileURLToPath(import.meta.url)),
+);

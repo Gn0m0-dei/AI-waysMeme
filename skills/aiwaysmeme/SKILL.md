@@ -19,7 +19,7 @@ aiwaysmeme render <template> "<caption 1>" "<caption 2>"
 ```
 
 If the package is not on `PATH`, call it by path:
-`node --experimental-transform-types "<package root>/bin/aiwaysmeme.ts" render …`
+`node "<package root>/dist/bin/aiwaysmeme.js" render …`
 
 The command writes the image straight to the terminal device and prints one
 line back. That line is a receipt, not output to relay: never paste it, never

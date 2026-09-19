@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node --experimental-transform-types --disable-warning=ExperimentalWarning
+#!/usr/bin/env node
 import { detectGraphics } from '../lib/graphics.ts';
 import { renderMeme } from '../lib/render.ts';
 import {

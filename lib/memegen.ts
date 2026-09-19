@@ -6,7 +6,14 @@ import type { MemeTemplate } from './templates.ts';
 // URL. It also resizes server side, which is what removed the last piece of
 // this package that only worked on macOS.
 const IMAGE_ENDPOINT = 'https://api.memegen.link/images';
-const IMAGE_EXTENSION = '.png';
+// The half-block renderer decodes the image itself and only reads PNG. A
+// terminal that draws real pixels decodes it instead, and there JPEG is the
+// right answer: the same meme is five times smaller, and the frame travels
+// through a terminal device where size is what breaks it.
+export enum ImageFormat {
+  Png = '.png',
+  Jpeg = '.jpg',
+}
 const BLANK_CAPTION = '_';
 
 // Order matters: underscores double before spaces become underscores, and
@@ -33,26 +40,39 @@ export const escapeCaption = (caption: string): string => {
   );
 };
 
-// Without a box the image comes at its native size, which is what a terminal
-// that draws real pixels wants: it scales the PNG itself.
+// Asking for a width alone keeps the aspect ratio; memegen does the resizing,
+// which is why there is nothing to scale locally.
+export interface ImageRequest {
+  readonly format: ImageFormat;
+  readonly width?: number;
+  readonly height?: number;
+}
+
 export const buildImageUrl = (
   template: MemeTemplate,
   captions: readonly string[],
-  box?: MemeBox,
+  request: ImageRequest,
 ): string => {
   const path = captions.length
     ? `${template}/${captions.map(escapeCaption).join('/')}`
     : template;
-  const size = box ? `?width=${box.pixelWidth}&height=${box.pixelHeight}` : '';
-  return `${IMAGE_ENDPOINT}/${path}${IMAGE_EXTENSION}${size}`;
+  const size = new URLSearchParams();
+  if (request.width) {
+    size.set('width', String(request.width));
+  }
+  if (request.height) {
+    size.set('height', String(request.height));
+  }
+  const query = size.size ? `?${size}` : '';
+  return `${IMAGE_ENDPOINT}/${path}${request.format}${query}`;
 };
 
 export const fetchMemeBytes = async (
   template: MemeTemplate,
   captions: readonly string[],
-  box?: MemeBox,
+  request: ImageRequest,
 ): Promise<Buffer> => {
-  const url = buildImageUrl(template, captions, box);
+  const url = buildImageUrl(template, captions, request);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`memegen answered ${response.status} for ${url}`);
@@ -65,4 +85,10 @@ export const fetchMeme = async (
   captions: readonly string[],
   box: MemeBox,
 ): Promise<DecodedImage> =>
-  decodePng(await fetchMemeBytes(template, captions, box));
+  decodePng(
+    await fetchMemeBytes(template, captions, {
+      format: ImageFormat.Png,
+      width: box.pixelWidth,
+      height: box.pixelHeight,
+    }),
+  );

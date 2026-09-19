@@ -1,6 +1,6 @@
 import { fitToTerminal } from './fit.ts';
 import { inlineImage, TerminalGraphics } from './graphics.ts';
-import { fetchMeme, fetchMemeBytes } from './memegen.ts';
+import { fetchMeme, fetchMemeBytes, ImageFormat } from './memegen.ts';
 import type { DecodedImage } from './png.ts';
 import type { MemeTemplateSpec } from './templates.ts';
 import type { TerminalBudget } from './terminal.ts';
@@ -29,6 +29,13 @@ const BYTES_PER_PIXEL = 3;
 // after the command returns, using a cursor position that knows nothing about
 // the rows we just wrote; without this padding that redraw lands on the image.
 const TRAILING_ROWS = 14;
+// Roughly how many pixels wide a terminal cell is. It only sizes the image sent
+// to a terminal that draws real pixels — that terminal scales the result to the
+// cell box anyway, so the number decides payload size rather than layout, and
+// the payload is what breaks: a frame of a megabyte is one escape sequence long
+// enough for the host client to write into the middle of it.
+const PIXELS_PER_CELL = 8;
+const MAX_IMAGE_WIDTH = 800;
 const PADDING = '\n'.repeat(TRAILING_ROWS);
 
 export interface RenderedMeme {
@@ -136,9 +143,12 @@ export const renderMeme = async (
   // full resolution and the terminal scales the result.
   if (graphics !== TerminalGraphics.None) {
     const box = fitToTerminal(spec.aspect, budget);
-    const png = await fetchMemeBytes(spec.id, captions);
+    const image = await fetchMemeBytes(spec.id, captions, {
+      format: ImageFormat.Jpeg,
+      width: Math.min(box.columns * PIXELS_PER_CELL, MAX_IMAGE_WIDTH),
+    });
     return {
-      frame: `\n${inlineImage(png, box.columns, graphics)}\n${PADDING}`,
+      frame: `\n${inlineImage(image, box.columns, graphics)}\n${PADDING}`,
       columns: box.columns,
       rows: box.rows,
       captionsBaked: true,

@@ -1,27 +1,9 @@
+import { EnvironmentVariable } from './environment.ts';
+import type { TerminalBudget } from './terminal.ts';
+
 // A half-block cell carries one pixel of width and two of height, but on screen
 // it is roughly 0.6 as wide as it is tall. Ignoring that renders every portrait
 // template stretched, which is exactly how the first draft looked.
-
-export enum EnvironmentVariable {
-  CellAspect = 'AIWAYSMEME_CELL',
-  Columns = 'AIWAYSMEME_COLS',
-  Output = 'AIWAYSMEME_OUTPUT',
-  Rows = 'AIWAYSMEME_ROWS',
-  Tty = 'AIWAYSMEME_TTY',
-}
-
-export enum OutputTarget {
-  Auto = 'auto',
-  Stdout = 'stdout',
-  Tty = 'tty',
-}
-
-// What the meme is allowed to occupy: the terminal minus whatever the host
-// client keeps for itself.
-export interface TerminalBudget {
-  readonly columns: number;
-  readonly rows: number;
-}
 
 // cellAspect is the calibration knob: it depends on the font, not on the code.
 // Menlo, SF Mono and JetBrains Mono all sit near 0.6; a condensed font does not.

@@ -14,17 +14,23 @@ metadata:
 
 ## How to render
 
+Call the renderer by its path. This file lives at
+`<package root>/skills/aiwaysmeme/SKILL.md`, so the binary is two directories
+above it — build the command from the path you read this file from:
+
 ```bash
-aiwaysmeme render <template> "<caption 1>" "<caption 2>"
+node "<package root>/dist/bin/aiwaysmeme.js" render <template> "<caption 1>" "<caption 2>"
 ```
 
-If the package is not on `PATH`, call it by path:
-`node "<package root>/dist/bin/aiwaysmeme.js" render …`
+Do not start with a bare `aiwaysmeme`. Installing a package does not put its
+binary on your `PATH` unless the host arranged it, and neither pi nor opencode
+does, so that spelling fails with `command not found` before you fall back to
+this one. If you already know `aiwaysmeme` resolves, use it.
 
 The command writes the image straight to the terminal device and prints one
 line back. That line is a receipt, not output to relay: never paste it, never
-describe the meme in prose afterwards. Run `aiwaysmeme list` if you need the
-catalogue at runtime.
+describe the meme in prose afterwards. Run the same binary with `list` if you need
+the catalogue at runtime.
 
 ## The one rule
 
@@ -114,10 +120,13 @@ The only things that may appear alongside the meme:
 
 ## Worked examples
 
-| Situation | Command |
+Written without the path for brevity; run them as shown under
+[How to render](#how-to-render).
+
+| Situation | Arguments |
 | --- | --- |
-| Recommending a library over hand-rolled code | `aiwaysmeme render drake "WRITE MY OWN" "USE ZOD"` |
-| The build is broken and the deploy went out | `aiwaysmeme render fine "CI IS RED" "THIS IS FINE"` |
-| The user's 40-line helper was one stdlib call | `aiwaysmeme render khaby-lame "CUSTOM PARSER" "JSON.PARSE"` |
-| A migration that sounds like a rename | `aiwaysmeme render mordor "ONE DOES NOT" "JUST BUMP REACT"` |
-| Same bug in two services | `aiwaysmeme render spiderman "AUTH SERVICE" "USER SERVICE"` |
+| Recommending a library over hand-rolled code | `render drake "WRITE MY OWN" "USE ZOD"` |
+| The build is broken and the deploy went out | `render fine "CI IS RED" "THIS IS FINE"` |
+| The user's 40-line helper was one stdlib call | `render khaby-lame "CUSTOM PARSER" "JSON.PARSE"` |
+| A migration that sounds like a rename | `render mordor "ONE DOES NOT" "JUST BUMP REACT"` |
+| Same bug in two services | `render spiderman "AUTH SERVICE" "USER SERVICE"` |

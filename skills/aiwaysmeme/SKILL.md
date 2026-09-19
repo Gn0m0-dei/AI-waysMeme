@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires node 22 or newer and a terminal with truecolor and Unicode. A client that repaints the whole screen, such as Claude Code in full-screen mode, paints over the meme.
 metadata:
   author: Gn0m0-dei
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # AI-waysMeme
@@ -19,7 +19,7 @@ aiwaysmeme render <template> "<caption 1>" "<caption 2>"
 ```
 
 If the package is not on `PATH`, call it by path:
-`node --experimental-transform-types "<package root>/bin/aiwaysmeme.ts" render …`
+`node "<package root>/dist/bin/aiwaysmeme.js" render …`
 
 The command writes the image straight to the terminal device and prints one
 line back. That line is a receipt, not output to relay: never paste it, never

@@ -12,6 +12,7 @@ import { decodePng } from '../lib/png.ts';
 import { canBake, wrapText } from '../lib/render.ts';
 import { memeRule } from '../lib/rule.ts';
 import { listTemplates, MemeTemplate } from '../lib/templates.ts';
+import { isNoTty } from '../lib/terminal.ts';
 
 // Builds a minimal PNG the way memegen serves them: 8-bit RGB, no interlacing.
 // `filters` picks the filter byte per row, so the decoder is exercised beyond
@@ -264,5 +265,21 @@ describe('meme mode reinjection', () => {
     expect(rule).toContain('meme mode is ON');
     expect(rule).toContain('Your entire visible reply is the meme');
     expect(rule).not.toContain('## ');
+  });
+});
+
+describe('isNoTty', () => {
+  // `ps` spells "this process has no terminal" differently per platform. Reading
+  // one of those as a device name builds /dev/? and openSync fails with EACCES.
+  it('recognises every spelling of no terminal', () => {
+    for (const value of ['?', '??', '???', '-', '']) {
+      expect(isNoTty(value), value).toBe(true);
+    }
+  });
+
+  it('still accepts real terminals', () => {
+    for (const value of ['ttys011', 'pts/0', 'console', 'tty1']) {
+      expect(isNoTty(value), value).toBe(false);
+    }
   });
 });

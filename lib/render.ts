@@ -1,8 +1,9 @@
-import { fitToTerminal, type TerminalBudget } from './fit.ts';
+import { fitToTerminal } from './fit.ts';
 import { inlineImage, TerminalGraphics } from './graphics.ts';
 import { fetchMeme, fetchMemeBytes } from './memegen.ts';
 import type { DecodedImage } from './png.ts';
 import type { MemeTemplateSpec } from './templates.ts';
+import type { TerminalBudget } from './terminal.ts';
 
 // Half blocks give two pixels of vertical resolution per cell: the upper half
 // is painted as foreground, the lower half as background. The alternative was a

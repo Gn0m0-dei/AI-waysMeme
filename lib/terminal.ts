@@ -1,11 +1,14 @@
 import { execFileSync } from 'node:child_process';
 import { closeSync, openSync, writeSync } from 'node:fs';
 
-import {
-  EnvironmentVariable,
-  OutputTarget,
-  type TerminalBudget,
-} from './fit.ts';
+import { EnvironmentVariable, OutputTarget } from './environment.ts';
+
+// What the meme is allowed to occupy: the terminal minus whatever the host
+// client keeps for itself.
+export interface TerminalBudget {
+  readonly columns: number;
+  readonly rows: number;
+}
 
 // An AI client spawns its plugins without a controlling terminal: /dev/tty
 // answers "device not configured" and stdout may be carrying protocol traffic.
@@ -15,7 +18,11 @@ import {
 
 const WINDOWS = 'win32';
 const MAX_ANCESTORS = 12;
-const NO_TTY = new Set(['??', '-', '']);
+// What `ps` prints for a process with no controlling terminal, which differs by
+// platform: BSD and macOS say `??`, Linux says a single `?`, and either can say
+// `-`. Reading one of those as a device name builds `/dev/?` and openSync fails
+// with EACCES, which is how this looked when it broke on Linux.
+const NO_TTY = /^(?:\?+|-)?$/;
 const FALLBACK_COLUMNS = 100;
 const FALLBACK_ROWS = 40;
 // Claude Code, opencode and pi all keep a prompt box at the bottom of the
@@ -26,6 +33,8 @@ const HOST_RESERVED_ROWS = 22;
 const MIN_ROWS = 10;
 const PROCESS_LINE = /^(\d+)\s+(\S+)$/;
 const TERMINAL_SIZE = /^(\d+)\s+(\d+)$/;
+
+export const isNoTty = (value: string): boolean => NO_TTY.test(value);
 
 const runQuietly = (command: string, args: readonly string[]): string => {
   try {
@@ -57,7 +66,7 @@ export const findTty = (): string | undefined => {
     if (!parsed) {
       return undefined;
     }
-    if (!NO_TTY.has(parsed[2])) {
+    if (!isNoTty(parsed[2])) {
       return `/dev/${parsed[2]}`;
     }
     pid = Number(parsed[1]);
@@ -115,11 +124,21 @@ export const paint = (frame: string, device?: string): string => {
     process.stdout.write(frame);
     return 'stdout';
   }
-  const handle = openSync(device, 'w');
   try {
-    writeSync(handle, frame);
-  } finally {
-    closeSync(handle);
+    const handle = openSync(device, 'w');
+    try {
+      writeSync(handle, frame);
+    } finally {
+      closeSync(handle);
+    }
+    return device;
+  } catch (error) {
+    // The device was found by reading the process tree, which can name one this
+    // process may not open — a detached session, a container, a tty owned by
+    // another user. Printing the meme is still better than failing, and the
+    // reason travels back in the receipt rather than being swallowed.
+    process.stdout.write(frame);
+    const reason = error instanceof Error ? error.message : String(error);
+    return `stdout (${device} could not be opened: ${reason})`;
   }
-  return device;
 };

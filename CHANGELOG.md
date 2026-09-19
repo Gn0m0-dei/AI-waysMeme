@@ -6,6 +6,19 @@ All notable changes to this skill are documented here. The format follows
 
 Installed copies are updated with `npx skills update aiwaysmeme`.
 
+## [0.1.1] - 2026-09-19
+
+### Fixed
+
+- The renderer could not run at all when the package was installed from npm. Node refuses to strip types from any file under `node_modules`, and that restriction is about where the file lives rather than what is in it, so no flag worked around it: every install through opencode and pi failed with `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING`. The CLI is now compiled to JavaScript in `dist/` before publishing and the binary points there. Claude Code was unaffected, because it clones the repository instead of installing from npm.
+- Terminal detection on Linux. `ps` spells "no controlling terminal" as a single `?` there, while BSD and macOS say `??`, so the renderer took the `?` for a device name, built `/dev/?` and died with `EACCES`. Every spelling — `?`, `??`, `-`, empty — is now read as no terminal.
+- A terminal device that cannot be opened no longer ends the command with a stack trace. The meme goes to stdout instead and the receipt says which device failed and why.
+- `packageRoot` now finds the package by walking up to its `package.json` rather than counting directory levels, which is what lets the compiled CLI in `dist/lib/` still locate `commands/` and `skills/` at the root.
+
+### Added
+
+- README instructions for distribution packages of opencode that disable npm installs, such as the openSUSE Tumbleweed RPM: clone the repository and point `opencode.json` at the plugin file.
+
 ## [0.1.0] - 2026-09-18
 
 ### Added

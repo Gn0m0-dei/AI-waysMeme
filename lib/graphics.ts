@@ -1,3 +1,5 @@
+import { EnvironmentVariable } from './environment.ts';
+
 // Tier 1: hand the terminal the PNG and let it draw real pixels. Nothing to
 // decode, nothing to approximate — when the terminal speaks one of these
 // protocols the meme looks like a meme, captions included, at any size.
@@ -6,10 +8,6 @@ export enum TerminalGraphics {
   None = 'none',
   Iterm2 = 'iterm2',
   Kitty = 'kitty',
-}
-
-export enum GraphicsVariable {
-  Protocol = 'AIWAYSMEME_GRAPHICS',
 }
 
 const BELL = '\u0007';
@@ -33,7 +31,7 @@ const isGraphics = (value: string): value is TerminalGraphics =>
   Object.values(TerminalGraphics).some((protocol) => protocol === value);
 
 export const detectGraphics = (): TerminalGraphics => {
-  const configured = process.env[GraphicsVariable.Protocol];
+  const configured = process.env[EnvironmentVariable.Graphics];
   if (configured && isGraphics(configured)) {
     return configured;
   }
